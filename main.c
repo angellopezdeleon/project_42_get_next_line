@@ -21,11 +21,11 @@ int main()
     }
 
     // Lee el archivo línea por línea usando get_next_line
-    while ((line = get_next_line(fd)) != NULL)
+    while ((line = get_next_line(fd)) != NULL && i < 10)
     {
         i++;
-        printf("Linea %d", i);
-        printf("%s", line);
+        printf("\nLinea %d\n", i);
+        printf("%s\n", line);
         free(line);
     }
 
