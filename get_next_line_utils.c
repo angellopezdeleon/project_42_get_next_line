@@ -92,22 +92,26 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	size_t		i;
 	size_t		j;
 	char		*str;
+	size_t		len_s1;
+	size_t		len_s2;
 
 	i = 0;
 	j = 0;
+	len_s1 = ft_strlen(s1);
+	len_s2 = ft_strlen(s2);
 	if (!s1 || !s2)
 		return (0);
-	str = (char *)malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1));
+	str = (char *)malloc(sizeof(char) * (len_s1 + len_s2 + 1));
 	if (!str)
 		return (0);
-	while (i < (ft_strlen(s1) + ft_strlen(s2)))
+	while (i < (len_s1 + len_s2))
 	{
-		while (i < ft_strlen(s1))
+		while (i < len_s1)
 		{
 			str[i] = s1[i];
 			i++;
 		}
-		while (j < ft_strlen(s2))
+		while (j < len_s2)
 			str[i++] = s2[j++];
 	}
 	str[i] = '\0';

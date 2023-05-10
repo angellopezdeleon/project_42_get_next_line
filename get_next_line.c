@@ -6,7 +6,7 @@
 /*   By: anglopez <anglopez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/05 13:21:47 by anglopez          #+#    #+#             */
-/*   Updated: 2023/05/10 11:17:01 by anglopez         ###   ########.fr       */
+/*   Updated: 2023/05/10 13:36:57 by anglopez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,29 +36,23 @@ static char *buff_for_next(char *buff_for_line)
 	return (buff_for_next);
 }
 
-// No estoy liberando la memoria de buff_for_line
-char	*get_line(char *buffer)
+char	*getting_line(char *buffer)
 {
 	char	*line;
 	int		i;
 
 	i = 0;
-	// if no line return NULL
 	if (!buffer[i])
 		return (NULL);
-	// go to the eol
 	while (buffer[i] && buffer[i] != '\n')
 		i++;
-	// malloc to eol
 	line = ft_calloc(i + 2, sizeof(char));
 	i = 0;
-	// line = buffer
 	while (buffer[i] && buffer[i] != '\n')
 	{
 		line[i] = buffer[i];
 		i++;
 	}
-	// if eol is \0 or \n, replace eol by \n
 	if (buffer[i] && buffer[i] == '\n')
 		line[i++] = '\n';
 	return (line);
@@ -68,15 +62,11 @@ static char *join_buff(char *buff_for_free, char *buff)
 {
 	char	*temp_buff;
 
-	// printf("\nbuff_for_free: %s\n", buff_for_free);
-	// printf("\nbuff: %s\n", buff);
 	temp_buff = ft_strjoin(buff_for_free, buff);
 	free(buff_for_free);
-	// printf("\njoin_buff: %s\n", temp_buff);
 	return (temp_buff);
 }
 
-// Lee el archivo y llena el buffer hasta encontrar un salto de línea
 static char *read_file(int fd, char *recived_buff)
 {
 	int		fd_result;
@@ -89,7 +79,6 @@ static char *read_file(int fd, char *recived_buff)
 	while (fd_result > 0)
 	{
 		fd_result = read(fd, temp_buff, BUFFER_SIZE);
-		// printf("\nGNL en proceso\n");
 		if (fd_result == -1)
 		{
 			free(temp_buff);
@@ -97,7 +86,6 @@ static char *read_file(int fd, char *recived_buff)
 		}
 		temp_buff[fd_result] = 0;
 		recived_buff = join_buff(recived_buff, temp_buff);
-		printf("\nreceived_buff: %s\n", recived_buff);
 		if (ft_strchr(temp_buff, '\n'))
 			break ;
 	}
@@ -105,26 +93,20 @@ static char *read_file(int fd, char *recived_buff)
 	return (recived_buff);
 }
 
-// Recibe un archivo y devuelve línea por línea
 char *get_next_line(int fd)
 {
     static char		*buffer;
     char			*line;
 
-	// printf("\nGNL llamada\n");
-	// printf("\nBUFFER_SIZE= %d\n", BUFFER_SIZE);
     if (fd < 0 || read(fd, 0, 0) < 0 || BUFFER_SIZE <= 0 )
 		return (NULL);
     buffer = read_file(fd, buffer);
-	// printf("\nbuffer: %s\n", buffer);
 	if (!buffer)
 	{
 		free(buffer);
 		return (NULL);
 	}
-	line = get_line(buffer);
-	// printf("\nline: %s\n", line);
+	line = getting_line(buffer);
 	buffer = buff_for_next(buffer);
-	// printf("\n--->line: %s\n", buffer);
     return (line);
 }
