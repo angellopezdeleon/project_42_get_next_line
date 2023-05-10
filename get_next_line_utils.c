@@ -6,7 +6,7 @@
 /*   By: anglopez <anglopez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/08 09:57:54 by anglopez          #+#    #+#             */
-/*   Updated: 2023/05/08 13:51:45 by anglopez         ###   ########.fr       */
+/*   Updated: 2023/05/09 13:15:33 by anglopez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 		return (NULL);
 	while (i < len)
 		substr[i++] = s[start++];
-	substr[i] = '\0';
+	substr[i] = '\n';
 	return (substr);
 }
 
