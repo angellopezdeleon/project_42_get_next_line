@@ -6,14 +6,14 @@
 /*   By: anglopez <anglopez@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/05 13:21:47 by anglopez          #+#    #+#             */
-/*   Updated: 2023/05/10 13:36:57 by anglopez         ###   ########.fr       */
+/*   Updated: 2023/05/12 12:39:51 by anglopez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 #include <stdio.h>
 
-static char *buff_for_next(char *buff_for_line)
+char	*ft_buff_for_next(char *buff_for_line)
 {
 	int		i;
 	int		j;
@@ -36,7 +36,7 @@ static char *buff_for_next(char *buff_for_line)
 	return (buff_for_next);
 }
 
-char	*getting_line(char *buffer)
+char	*ft_get_line(char *buffer)
 {
 	char	*line;
 	int		i;
@@ -47,6 +47,8 @@ char	*getting_line(char *buffer)
 	while (buffer[i] && buffer[i] != '\n')
 		i++;
 	line = ft_calloc(i + 2, sizeof(char));
+	if (!line)
+		return (NULL);
 	i = 0;
 	while (buffer[i] && buffer[i] != '\n')
 	{
@@ -54,11 +56,11 @@ char	*getting_line(char *buffer)
 		i++;
 	}
 	if (buffer[i] && buffer[i] == '\n')
-		line[i++] = '\n';
+		line[i] = buffer[i];
 	return (line);
 }
 
-static char *join_buff(char *buff_for_free, char *buff)
+char	*ft_join_buffers(char *buff_for_free, char *buff)
 {
 	char	*temp_buff;
 
@@ -67,7 +69,7 @@ static char *join_buff(char *buff_for_free, char *buff)
 	return (temp_buff);
 }
 
-static char *read_file(int fd, char *recived_buff)
+char	*ft_read_file(int fd, char *recived_buff)
 {
 	int		fd_result;
 	char	*temp_buff;
@@ -82,31 +84,30 @@ static char *read_file(int fd, char *recived_buff)
 		if (fd_result == -1)
 		{
 			free(temp_buff);
+			free(recived_buff);
 			return (NULL);
 		}
-		temp_buff[fd_result] = 0;
-		recived_buff = join_buff(recived_buff, temp_buff);
-		if (ft_strchr(temp_buff, '\n'))
+		temp_buff[fd_result] = '\0';
+		recived_buff = ft_join_buffers(recived_buff, temp_buff);
+		if (ft_strchr(recived_buff, '\n'))
 			break ;
 	}
 	free(temp_buff);
+	temp_buff = NULL;
 	return (recived_buff);
 }
 
-char *get_next_line(int fd)
+char	*get_next_line(int fd)
 {
-    static char		*buffer;
-    char			*line;
+	static char	*buffer;
+	char		*line;
 
-    if (fd < 0 || read(fd, 0, 0) < 0 || BUFFER_SIZE <= 0 )
+	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-    buffer = read_file(fd, buffer);
+	buffer = ft_read_file(fd, buffer);
 	if (!buffer)
-	{
-		free(buffer);
 		return (NULL);
-	}
-	line = getting_line(buffer);
-	buffer = buff_for_next(buffer);
-    return (line);
+	line = ft_get_line(buffer);
+	buffer = ft_buff_for_next(buffer);
+	return (line);
 }
